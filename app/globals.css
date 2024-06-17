@@ -66,6 +66,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* React Grid Layout styles */
@@ -229,7 +232,7 @@
 }
 
 /* Make buttons more clickable */
-button, 
+button,
 .cursor-pointer {
   position: relative;
   z-index: 10;

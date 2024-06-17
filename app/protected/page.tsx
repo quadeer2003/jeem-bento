@@ -34,12 +34,14 @@ export default function ProtectedPage() {
 
   if (loading || isLoading) {
     return (
-      <div className="flex-1 w-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4">Loading...</p>
+      <main className="flex-1 flex overflow-hidden h-screen">
+        <div className="flex-1 w-full flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4">Loading...</p>
+          </div>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -48,8 +50,10 @@ export default function ProtectedPage() {
   }
 
   return (
-    <div className="flex-1 w-full h-full">
-      <WorkspacePage user={user} initialWorkspaces={workspaces} />
-    </div>
+    <main className="flex-1 flex overflow-hidden h-screen">
+      <div className="flex-1 w-full h-full">
+        <WorkspacePage user={user} initialWorkspaces={workspaces} />
+      </div>
+    </main>
   );
 }

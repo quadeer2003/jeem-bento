@@ -1,136 +1,124 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+<h1 align="center">🍱 Jeem Bento</h1>
 
 <p align="center">
- The fastest way to build apps with Next.js and Supabase
+ Your customizable workspace management and productivity app
 </p>
 
 <p align="center">
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
+  <a href="#getting-started"><strong>Getting Started</strong></a> ·
+  <a href="#bento-types"><strong>Bento Types</strong></a> ·
+  <a href="#api-setup"><strong>API Setup</strong></a>
 </p>
 <br/>
 
-## Features
+<p align="center">
+  <strong>Organize Everything In One Beautiful Bento Grid</strong><br/>
+  A customizable bento grid workspace that adapts to your workflow. Drag, drop, and design your perfect productivity environment.
+</p>
+<br/>
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+## ✨ Features
 
-## Demo
+### 🎨 Beautiful Landing Page
+- Modern, responsive landing page with interactive grid background
+- Smooth animations and transitions
+- Dark mode support
+- Call-to-action sections for sign up and sign in
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+### 📦 Bento Grid Layout
+- **Drag & Drop**: Effortlessly rearrange your bentos with intuitive functionality
+- **Responsive Design**: Beautiful grid that adapts to any screen size
+- **Customizable**: Resize and position bentos exactly how you want them
+- **Glassmorphism Effects**: Modern UI with backdrop blur and transparency
 
-## Deploy to Vercel
+### 🔧 Built With
+- [Next.js 14](https://nextjs.org) - React framework with App Router
+- [Supabase](https://supabase.com) - Authentication and database
+- [Tailwind CSS](https://tailwindcss.com) - Utility-first styling
+- [shadcn/ui](https://ui.shadcn.com/) - Beautiful UI components
+- [BlockNote](https://www.blocknotejs.org/) - Rich text editor for notes
+- [React Grid Layout](https://github.com/react-grid-layout/react-grid-layout) - Draggable grid system
 
-Vercel deployment will guide you through creating a Supabase account and project.
+## 🚀 Getting Started
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+### Prerequisites
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+1. **Node.js** (v18 or higher)
+2. **pnpm** (recommended) or npm/yarn
+3. A **Supabase account** - Create one at [supabase.com](https://supabase.com)
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+### Installation
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
-
-## Clone and run locally
-
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
-
-2. Create a Next.js app using the Supabase Starter template npx command
-
+1. Clone the repository:
    ```bash
-   npx create-next-app --example with-supabase with-supabase-app
+   git clone <your-repo-url>
+   cd jeem-bento
    ```
 
+2. Install dependencies:
    ```bash
-   yarn create next-app --example with-supabase with-supabase-app
+   pnpm install
    ```
 
+3. Create a Supabase project at [database.new](https://database.new)
+
+4. Create a `.env.local` file in the root directory:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   NEXT_PUBLIC_API_NINJAS_KEY=your_api_ninjas_key
+   ```
+
+   Get your Supabase credentials from your [project's API settings](https://app.supabase.com/project/_/settings/api)
+
+5. Run the database migrations (found in the SQL files in the project root)
+
+6. Start the development server:
    ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
+   pnpm dev
    ```
 
-3. Use `cd` to change into the app's directory
+7. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-   ```bash
-   cd with-supabase-app
-   ```
+## 🎯 Bento Types
 
-4. Rename `.env.example` to `.env.local` and update the following:
+Jeem Bento supports multiple types of customizable widgets:
 
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
+### 📝 Productivity
+- **Notes**: Rich text editor with BlockNote for capturing thoughts and ideas
+- **Pomodoro Timer**: Productivity timer with customizable work and break periods
+- **Quick Mail**: Add contacts and quickly open Gmail with pre-filled recipients
 
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
+### 🔗 Organization
+- **Links**: Quick access to your favorite websites with custom backgrounds
+- **Contacts**: Manage and organize your important contacts
+- **Websites**: Bookmark and categorize frequently visited sites
 
-5. You can now run the Next.js local development server:
+### 🎨 Widgets
+- **Photo**: Display your favorite images
+- **Calendar**: Embedded calendar integration
+- **YouTube**: Embedded YouTube videos
+- **Quote of the Day**: Random inspirational quotes (powered by API-Ninjas)
+- **Weather**: Current weather information for any location (powered by Open-Meteo)
+- **Screenshots**: Quick access to saved screenshots
 
-   ```bash
-   npm run dev
-   ```
+## 🔑 API Setup
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+### Required APIs
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+1. **API-Ninjas (Quote of the Day)**
+   - Sign up at [api-ninjas.com](https://api-ninjas.com/)
+   - Get your API key from the dashboard
+   - Add to `.env.local` as `NEXT_PUBLIC_API_NINJAS_KEY`
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+### Free APIs (No Key Required)
 
-## Feedback and issues
+- **Open-Meteo (Weather)**: Free weather API, no registration needed
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+### Database Schema
 
-## More Supabase examples
-
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
-
-# Jeem Bento
-
-A customizable dashboard application with draggable and resizable bento-style components.
-
-## New Features
-
-We've added several new bento item types to enhance your workspace:
-
-1. **Pomodoro Timer**: A productivity timer with customizable work and break periods
-2. **Quote of the Day**: Shows a random inspirational quote that changes daily (uses API-Ninjas)
-3. **Quick Mail**: Allows adding contacts and quickly opening Gmail with their email addresses
-4. **Weather Widget**: Displays current weather information for a selected location (uses Open-Meteo API)
-
-## Setup
-
-### Environment Variables
-
-Create a `.env.local` file in the root directory with the following variables:
-
-```
-NEXT_PUBLIC_API_NINJAS_KEY=your_api_ninjas_key
-```
-
-You'll need to sign up for an API key at [API-Ninjas](https://api-ninjas.com/) to use the Quote of the Day feature.
-
-### Database Setup
-
-Run the SQL script to update the database schema for the new bento item types:
+Run the following SQL to update your Supabase database:
 
 ```sql
 ALTER TABLE bento_items 
@@ -138,17 +126,48 @@ ALTER TABLE bento_items
 
 ALTER TABLE bento_items 
   ADD CONSTRAINT bento_items_type_check 
-  CHECK (type IN ('photo', 'calendar', 'youtube', 'links', 'screenshots', 'contacts', 'websites', 'pomodoro', 'quote', 'quickmail', 'weather'));
+  CHECK (type IN ('photo', 'calendar', 'youtube', 'links', 'screenshots', 'contacts', 'websites', 'pomodoro', 'quote', 'quickmail', 'weather', 'notes'));
 ```
 
-## API Information
+## 🎨 Customization
 
-- **Quotes**: Uses the [API-Ninjas Quotes API](https://api-ninjas.com/api/quotes)
-- **Weather**: Uses the [Open-Meteo Weather API](https://open-meteo.com/) (free, no API key required)
+- **Themes**: Built-in dark mode support with theme switcher
+- **Layouts**: Fully customizable grid layouts saved per workspace
+- **Colors**: Gradient backgrounds and customizable color schemes
+- **Sizes**: Resize bentos to fit your workflow
 
-## Usage Notes
+## 📱 Usage
 
-- The Pomodoro Timer allows customizing work and break periods
-- The Quote of the Day refreshes once per day automatically
-- The Weather widget uses geolocation by default but allows searching for any location
-- The Quick Mail feature opens Gmail compose with pre-filled recipient addresses
+1. **Create an Account**: Sign up from the landing page
+2. **Create a Workspace**: Start with a default workspace or create a new one
+3. **Add Bentos**: Click "Add Bento" and choose from various types
+4. **Customize**: Drag, drop, resize, and configure each bento
+5. **Enjoy**: Your personalized workspace is automatically saved
+
+## 🛠️ Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run development server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+---
+
+<p align="center">Made with ❤️ by the Jeem Bento team</p>

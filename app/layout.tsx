@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} flex flex-col h-screen`}>
+      <body className={`${inter.className}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -37,9 +37,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             {!hasEnvVars && <EnvVarWarning />}
-            <main className="flex-1 flex overflow-hidden">
-              {children}
-            </main>
+            {children}
           </AuthProvider>
         </ThemeProvider>
       </body>
