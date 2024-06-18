@@ -42,54 +42,68 @@ function SignInForm() {
     : "/sign-up";
 
   return (
-    <form
-      className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-      onSubmit={handleSubmit}
-    >
-      <label className="text-md" htmlFor="email">
-        Email
-      </label>
-      <input
-        className="rounded-md px-4 py-2 bg-inherit border mb-6"
-        name="email"
-        placeholder="you@example.com"
-        required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <label className="text-md" htmlFor="password">
-        Password
-      </label>
-      <input
-        className="rounded-md px-4 py-2 bg-inherit border mb-6"
-        type="password"
-        name="password"
-        placeholder="••••••••"
-        required
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+    <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
+      <div>
+        <label className="text-sm font-medium mb-2 block" htmlFor="email">
+          Email
+        </label>
+        <input
+          className="rounded-lg px-4 py-3 bg-background border border-input w-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className="text-sm font-medium mb-2 block" htmlFor="password">
+          Password
+        </label>
+        <input
+          className="rounded-lg px-4 py-3 bg-background border border-input w-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          type="password"
+          name="password"
+          placeholder="••••••••"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+
       {error && (
-        <p className="text-destructive text-sm mb-4">{error}</p>
+        <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-3">
+          <p className="text-destructive text-sm">{error}</p>
+        </div>
       )}
+
       <button
-        className="bg-primary rounded-md px-4 py-2 text-primary-foreground mb-2"
+        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 dark:from-purple-500 dark:to-blue-500 dark:hover:from-purple-600 dark:hover:to-blue-600 text-white rounded-lg px-4 py-3 font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         disabled={isLoading}
       >
         {isLoading ? "Signing In..." : "Sign In"}
       </button>
-      <Link
-        href={signUpUrl}
-        className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2 text-center"
-      >
-        Sign Up
-      </Link>
-      <Link
-        href="/forgot-password"
-        className="text-sm text-primary hover:underline text-center"
-      >
-        Forgot your password?
-      </Link>
+
+      <div className="flex flex-col gap-3 items-center">
+        <Link
+          href="/forgot-password"
+          className="text-sm text-muted-foreground hover:text-primary transition-colors"
+        >
+          Forgot your password?
+        </Link>
+
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground">Don't have an account?</span>
+          <Link
+            href={signUpUrl}
+            className="text-primary hover:underline font-medium"
+          >
+            Sign Up
+          </Link>
+        </div>
+      </div>
     </form>
   );
 }
@@ -97,21 +111,20 @@ function SignInForm() {
 // Loading fallback component
 function SignInFormFallback() {
   return (
-    <div className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
-      <div className="rounded-md px-4 py-2 bg-inherit border mb-6 h-10"></div>
-      <div className="rounded-md px-4 py-2 bg-inherit border mb-6 h-10"></div>
-      <div className="bg-primary/30 rounded-md px-4 py-2 mb-2 h-10"></div>
-      <div className="border border-foreground/20 rounded-md px-4 py-2 mb-2 h-10"></div>
+    <div className="flex flex-col gap-4 w-full animate-pulse">
+      <div className="h-10 bg-muted rounded-lg"></div>
+      <div className="h-10 bg-muted rounded-lg"></div>
+      <div className="h-12 bg-muted rounded-lg"></div>
     </div>
   );
 }
 
 export default function SignIn() {
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
+    <div className="w-full space-y-6">
       <Link
         href="/"
-        className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -123,16 +136,30 @@ export default function SignIn() {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
+          className="h-4 w-4 transition-transform group-hover:-translate-x-1"
         >
           <polyline points="15 18 9 12 15 6" />
-        </svg>{" "}
-        Back
+        </svg>
+        Back to Home
       </Link>
 
-      <Suspense fallback={<SignInFormFallback />}>
-        <SignInForm />
-      </Suspense>
+      <div className="text-center space-y-2">
+        <div className="flex justify-center">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400 flex items-center justify-center">
+            <span className="text-white text-xl">🍱</span>
+          </div>
+        </div>
+        <h1 className="text-3xl font-bold">Welcome back</h1>
+        <p className="text-muted-foreground">
+          Sign in to your Jeem Bento workspace
+        </p>
+      </div>
+
+      <div className="bg-card border border-border rounded-2xl p-8 shadow-lg">
+        <Suspense fallback={<SignInFormFallback />}>
+          <SignInForm />
+        </Suspense>
+      </div>
     </div>
   );
 }
