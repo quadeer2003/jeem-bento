@@ -67,3 +67,282 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* React Grid Layout styles */
+.react-grid-layout {
+  position: relative;
+  transition: height 200ms ease;
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top, width, height;
+}
+
+.react-grid-item.cssTransforms {
+  transition-property: transform, width, height;
+}
+
+.react-grid-item.resizing {
+  z-index: 1;
+  will-change: width, height;
+}
+
+.react-grid-item.react-draggable-dragging {
+  transition: none;
+  z-index: 3;
+  will-change: transform;
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: rgba(var(--primary), 0.1);
+  border: 2px dashed hsl(var(--primary));
+  border-radius: var(--radius);
+  opacity: 0.5;
+  transition-duration: 100ms;
+  z-index: 2;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.react-grid-item > .react-resizable-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  bottom: 0;
+  right: 0;
+  background-position: bottom right;
+  padding: 0 3px 3px 0;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  box-sizing: border-box;
+  cursor: se-resize;
+}
+
+/* Make sure bento items fill their grid cells */
+.react-grid-item > div {
+  height: 100%;
+  width: 100%;
+}
+
+/* Ensure zero padding in bento items */
+.react-grid-item > div > div {
+  padding: 0 !important;
+}
+
+.react-grid-item .p-4,
+.react-grid-item .p-2,
+.react-grid-item .p-1,
+.react-grid-item .px-4,
+.react-grid-item .py-4,
+.react-grid-item .px-2,
+.react-grid-item .py-2,
+.react-grid-item .px-1,
+.react-grid-item .py-1 {
+  padding: 0 !important;
+}
+
+/* Ensure content fills the space */
+.react-grid-item > div {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Ensure the bento item component fills its container */
+.react-grid-item > div > div {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Compact content */
+.react-grid-item p {
+  margin-bottom: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.react-grid-item input,
+.react-grid-item button {
+  padding: 0.25rem 0.5rem;
+}
+
+.react-grid-item .space-y-2,
+.react-grid-item .space-y-1 {
+  margin-top: 0 !important;
+}
+
+/* Remove excess padding */
+.react-grid-item .p-4,
+.react-grid-item .p-2,
+.react-grid-item .p-1 {
+  padding: 0 !important;
+}
+
+.react-grid-item .mt-4,
+.react-grid-item .mt-2,
+.react-grid-item .mt-1 {
+  margin-top: 0 !important;
+}
+
+.react-grid-item .mb-4,
+.react-grid-item .mb-2,
+.react-grid-item .mb-1 {
+  margin-bottom: 0 !important;
+}
+
+/* Drag handle styles */
+.drag-handle {
+  cursor: grab;
+  touch-action: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.drag-handle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Prevent dragging on certain elements */
+.no-drag {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10;
+}
+
+.no-drag * {
+  pointer-events: auto !important;
+}
+
+/* Make buttons more clickable */
+button, 
+.cursor-pointer {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto !important;
+  min-width: 24px;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure the bento item doesn't interfere with button clicks */
+.react-grid-item > div {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+/* Improve react-grid-layout styles */
+.react-resizable-handle {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3L2 22"></path><path d="M18 22H22V18"></path></svg>');
+  opacity: 0.5;
+}
+
+.react-grid-item:hover .react-resizable-handle {
+  opacity: 1;
+}
+
+/* Controls for bento items - hover effects */
+.bento-controls {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  padding: 2px;
+}
+
+.dark .bento-controls {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.react-grid-item:hover .bento-controls {
+  opacity: 1;
+}
+
+/* Improve button visibility */
+.bento-controls button,
+.bento-controls .cursor-pointer,
+.bento-controls .drag-handle {
+  backdrop-filter: none;
+  background-color: transparent;
+  padding: 2px;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+.bento-controls button:hover,
+.bento-controls .cursor-pointer:hover,
+.bento-controls .drag-handle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark .bento-controls button:hover,
+.dark .bento-controls .cursor-pointer:hover,
+.dark .bento-controls .drag-handle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Sidebar button styles */
+.sidebar-logout-button {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: rgb(220, 38, 38);
+  transition: all 0.2s ease;
+}
+
+.sidebar-logout-button:hover {
+  background-color: rgba(255, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+/* Glassmorphism effect for bento items */
+.react-grid-item > div > div {
+  border-radius: 16px !important;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  transition: all 0.3s ease;
+}
+
+.dark .react-grid-item > div > div {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.react-grid-item:hover > div > div {
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Override border radius for all bento items */
+.react-grid-item .rounded-lg,
+.react-grid-item .rounded {
+  border-radius: 16px !important;
+}
+
+/* Ensure curved edges are visible */
+.react-grid-item > div {
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 0;
+}

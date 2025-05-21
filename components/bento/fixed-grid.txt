@@ -1,0 +1,160 @@
+"use client";
+
+import { BentoItem, BentoItemType } from "@/lib/types";
+import { useState, useEffect } from "react";
+import BentoItemComponent from "@/components/bento/BentoItem";
+import { Responsive, WidthProvider } from "react-grid-layout";
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
+
+interface BentoGridProps {
+  items: BentoItem[];
+  onItemUpdate?: (item: BentoItem) => void;
+  onItemDelete?: (id: string) => void;
+  editable?: boolean;
+}
+
+// Define default column spans for different item types
+const getDefaultColumnSpan = (type: BentoItemType): number => {
+  switch (type) {
+    case 'photo':
+      return 1;
+    case 'calendar':
+      return 2;
+    case 'youtube':
+      return 1;
+    case 'screenshots':
+      return 2;
+    case 'links':
+      return 1;
+    case 'contacts':
+      return 1;
+    case 'websites':
+      return 1;
+    default:
+      return 1;
+  }
+};
+
+export default function BentoGrid({ 
+  items, 
+  onItemUpdate,
+  onItemDelete,
+  editable = true
+}: BentoGridProps) {
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [layouts, setLayouts] = useState<any>({ lg: [] });
+  const [mounted, setMounted] = useState(false);
+
+  // Handle item deletion with layout updates
+  const handleItemDelete = (itemId: string) => {
+    if (onItemDelete) {
+      onItemDelete(itemId);
+      
+      // Update layouts to remove the deleted item
+      const currentLayouts = layouts.lg || [];
+      const updatedLayouts = currentLayouts.filter(layout => layout.i !== itemId);
+      setLayouts({ lg: updatedLayouts });
+    }
+  };
+
+  // Initialize layouts once items are loaded
+  useEffect(() => {
+    setMounted(true);
+    
+    // Create layout configuration for each item
+    const newLayouts = items.map((item) => {
+      // Use existing position if available, otherwise create a default
+      const columnSpan = getDefaultColumnSpan(item.type);
+      
+      return {
+        i: item.id,
+        x: item.position.x || 0,
+        y: item.position.y || 0,
+        w: item.position.w || columnSpan,
+        h: item.position.h || 1,
+        minW: 1,
+        maxW: 4
+      };
+    });
+    
+    setLayouts({ lg: newLayouts });
+  }, [items]);
+
+  // Handle layout change
+  const handleLayoutChange = (currentLayout: any) => {
+    // Only update if we have items and the layout has items
+    if (items.length === 0 || currentLayout.length === 0) return;
+    
+    // Update layouts state
+    setLayouts({ lg: currentLayout });
+  };
+
+  // Handle layout change when it's done (after dragging stops)
+  const handleLayoutChangeComplete = (currentLayout: any) => {
+    // Only update if we have items and the layout has items
+    if (items.length === 0 || currentLayout.length === 0 || !onItemUpdate) return;
+    
+    // Update item positions in database
+    currentLayout.forEach((layout: any) => {
+      const item = items.find(i => i.id === layout.i);
+      if (item) {
+        // Only update if position actually changed
+        if (
+          item.position.x !== layout.x ||
+          item.position.y !== layout.y ||
+          item.position.w !== layout.w ||
+          item.position.h !== layout.h
+        ) {
+          const updatedItem = {
+            ...item,
+            position: {
+              x: layout.x,
+              y: layout.y,
+              w: layout.w,
+              h: layout.h
+            }
+          };
+          onItemUpdate(updatedItem);
+        }
+      }
+    });
+  };
+
+  // Wait until component is mounted to render the grid (client-side only)
+  if (!mounted) return <div>Loading...</div>;
+
+  return (
+    <ResponsiveGridLayout
+      className="layout"
+      layouts={layouts}
+      breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+      cols={{ lg: 4, md: 4, sm: 2, xs: 1, xxs: 1 }}
+      rowHeight={200}
+      isDraggable={editable}
+      isResizable={editable}
+      onLayoutChange={handleLayoutChange}
+      onDragStop={handleLayoutChangeComplete}
+      onResizeStop={handleLayoutChangeComplete}
+      compactType="vertical"
+      preventCollision={false}
+      margin={[16, 16]}
+      draggableHandle=".drag-handle"
+    >
+      {items.map((item) => (
+        <div key={item.id}>
+          <BentoItemComponent
+            item={item}
+            isSelected={selectedItem === item.id}
+            onSelect={() => setSelectedItem(item.id)}
+            onUpdate={onItemUpdate}
+            onDelete={handleItemDelete}
+            editable={editable}
+          />
+        </div>
+      ))}
+    </ResponsiveGridLayout>
+  );
+}

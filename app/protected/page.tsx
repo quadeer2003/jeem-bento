@@ -1,38 +1,55 @@
-import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
-import { createClient } from "@/utils/supabase/server";
-import { InfoIcon } from "lucide-react";
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function ProtectedPage() {
-  const supabase = await createClient();
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getUserWorkspaces } from "@/lib/db";
+import WorkspacePage from "@/components/workspace/WorkspacePage";
+import { Workspace } from "@/lib/types";
+import { useAuth } from "@/lib/auth-context";
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default function ProtectedPage() {
+  const { user, loading } = useAuth();
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function loadWorkspaces() {
+      if (!loading && user) {
+        try {
+          const userWorkspaces = await getUserWorkspaces(user.id);
+          setWorkspaces(userWorkspaces);
+        } catch (error) {
+          console.error("Error loading workspaces:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      } else if (!loading && !user) {
+        router.push("/sign-in");
+      }
+    }
+
+    loadWorkspaces();
+  }, [user, loading, router]);
+
+  if (loading || isLoading) {
+    return (
+      <div className="flex-1 w-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
-    return redirect("/sign-in");
+    return null; // Will redirect in useEffect
   }
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-12">
-      <div className="w-full">
-        <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
-          <InfoIcon size="16" strokeWidth={2} />
-          This is a protected page that you can only see as an authenticated
-          user
-        </div>
-      </div>
-      <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-2xl mb-4">Your user details</h2>
-        <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
-          {JSON.stringify(user, null, 2)}
-        </pre>
-      </div>
-      <div>
-        <h2 className="font-bold text-2xl mb-4">Next steps</h2>
-        <FetchDataSteps />
-      </div>
+    <div className="flex-1 w-full h-full">
+      <WorkspacePage user={user} initialWorkspaces={workspaces} />
     </div>
   );
 }
