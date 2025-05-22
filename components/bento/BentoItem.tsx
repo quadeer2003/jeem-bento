@@ -135,7 +135,7 @@ export default function BentoItemComponent({
         
         {/* Title */}
         {item.title && (
-          <h3 className="font-medium truncate text-xs px-0.5 pt-0.5">{item.title}</h3>
+          <h3 className="font-medium truncate text-lg mb-3 px-0.5 pt-0.5 ml-5">{item.title}</h3>
         )}
         
         {/* Content */}

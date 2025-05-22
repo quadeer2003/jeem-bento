@@ -73,7 +73,8 @@ export default function PhotoItem({ item, onUpdate, editable }: PhotoItemProps) 
           <img 
             src={item.content.imageUrl} 
             alt={item.content.alt || 'User photo'} 
-            className="w-full h-auto rounded-lg object-cover"
+            className="w-full h-full rounded-lg object-cover"
+           
           />
           {editable && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity">

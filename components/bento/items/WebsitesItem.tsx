@@ -2,7 +2,7 @@
 
 import { BentoItem, Website } from "@/lib/types";
 import { useState } from "react";
-import { ExternalLink, Globe, Plus, Trash2 } from "lucide-react";
+import { Globe, Plus, Trash2 } from "lucide-react";
 
 interface WebsitesItemProps {
   item: BentoItem;
@@ -83,7 +83,12 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
             return (
               <div key={website.id} className="p-2 bg-secondary/30 rounded flex flex-col">
                 <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-2 overflow-hidden">
+                  <a 
+                    href={website.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 overflow-hidden hover:underline text-primary"
+                  >
                     {faviconUrl ? (
                       <img 
                         src={faviconUrl} 
@@ -94,7 +99,7 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
                       <Globe size={16} className="flex-shrink-0" />
                     )}
                     <div className="font-medium truncate">{website.title}</div>
-                  </div>
+                  </a>
                   {editable && (
                     <button 
                       onClick={() => removeWebsite(website.id)}
@@ -104,14 +109,6 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
                     </button>
                   )}
                 </div>
-                <a 
-                  href={website.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="mt-2 text-xs text-primary hover:underline flex items-center gap-1 self-end"
-                >
-                  Visit <ExternalLink size={12} />
-                </a>
               </div>
             );
           })}

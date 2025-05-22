@@ -1,8 +1,8 @@
 "use client";
 
 import { BentoItem, Link } from "@/lib/types";
-import { useState } from "react";
-import { ExternalLink, Plus, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ExternalLink, Plus, Trash2, Globe } from "lucide-react";
 
 interface LinksItemProps {
   item: BentoItem;
@@ -10,11 +10,44 @@ interface LinksItemProps {
   editable: boolean;
 }
 
+interface LinkMetadata {
+  title?: string;
+  description?: string;
+  domain?: string;
+}
+
 export default function LinksItem({ item, onUpdate, editable }: LinksItemProps) {
   const [links, setLinks] = useState<Link[]>(item.content?.links || []);
   const [newLink, setNewLink] = useState({ title: "", url: "" });
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [metadata, setMetadata] = useState<Record<string, LinkMetadata>>({});
+
+  // Load metadata for links
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      const newMetadata: Record<string, LinkMetadata> = {};
+      
+      for (const link of links) {
+        try {
+          const domain = new URL(link.url).hostname;
+          
+          // For demonstration, we're extracting domain only
+          // In a real implementation, you would use an API to fetch actual metadata
+          newMetadata[link.id] = {
+            domain,
+            description: `Content from ${domain}`,
+          };
+        } catch (e) {
+          console.error("Error parsing URL:", e);
+        }
+      }
+      
+      setMetadata(newMetadata);
+    };
+    
+    fetchMetadata();
+  }, [links]);
 
   const validateUrl = (url: string): boolean => {
     try {
@@ -22,6 +55,15 @@ export default function LinksItem({ item, onUpdate, editable }: LinksItemProps) 
       return true;
     } catch (e) {
       return false;
+    }
+  };
+
+  const getFaviconUrl = (url: string) => {
+    try {
+      const parsedUrl = new URL(url);
+      return `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=32`;
+    } catch (e) {
+      return null;
     }
   };
 
@@ -67,33 +109,55 @@ export default function LinksItem({ item, onUpdate, editable }: LinksItemProps) 
   return (
     <div className="w-full">
       {links.length > 0 ? (
-        <div className="space-y-1">
-          {links.map(link => (
-            <div key={link.id} className="flex items-center justify-between py-1 px-1 bg-secondary/30 rounded text-xs">
-              <div className="flex items-center gap-1 overflow-hidden">
-                <ExternalLink size={12} className="flex-shrink-0" />
-                <a 
-                  href={link.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline truncate"
-                >
-                  {link.title}
-                </a>
+        <div className="space-y-2">
+          {links.map(link => {
+            const faviconUrl = getFaviconUrl(link.url);
+            
+            return (
+              <div key={link.id} className="flex flex-col  py-2 px-2 ml-5 rounded ">
+                <div className="flex w-full mb-1 mt-4">
+                  <div className="flex mt-4"></div>
+                  <a 
+                    href={link.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex gap-2 text-primary hover:underline "
+                  >
+                    {faviconUrl ? (
+                      <img 
+                        src={faviconUrl} 
+                        alt="" 
+                        className="w-4 h-4 flex-shrink-0"
+                      />
+                    ) : (
+                      <Globe size={14} className="flex-shrink-0" />
+                    )}
+                    <span className="font-medium">{link.title}</span>
+                  </a>
+                  <div className="flex-1 flex justify-end">
+                    {editable && (
+                      <button 
+                        onClick={() => removeLink(link.id)}
+                        className="text-destructive p-0.5 hover:bg-destructive/10 rounded"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+                
+                {metadata[link.id] && (
+                  <div className="text-xs text-muted-foreground ">
+                    <p>{metadata[link.id].domain}</p>
+                   
+                  </div>
+                )}
               </div>
-              {editable && (
-                <button 
-                  onClick={() => removeLink(link.id)}
-                  className="text-destructive p-0.5 hover:bg-destructive/10 rounded"
-                >
-                  <Trash2 size={12} />
-                </button>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
-        <div className="text-center p-1 bg-secondary/20 rounded text-xs">
+        <div className=" p-1  rounded text-md">
           {editable ? "Add links" : "No links"}
         </div>
       )}
@@ -107,29 +171,29 @@ export default function LinksItem({ item, onUpdate, editable }: LinksItemProps) 
                 value={newLink.title}
                 onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
                 placeholder="Link title"
-                className="w-full p-1 border rounded text-xs"
+                className="w-full p-1 border rounded text-md"
               />
               <input
                 type="text"
                 value={newLink.url}
                 onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
                 placeholder="URL (https://...)"
-                className="w-full p-1 border rounded text-xs"
+                className="w-full p-1 border rounded text-md"
               />
-              {error && <p className="text-destructive text-xs">{error}</p>}
+              {error && <p className="text-destructive text-md">{error}</p>}
               <div className="flex justify-end gap-1">
                 <button
                   onClick={() => {
                     setIsAddingLink(false);
                     setError(null);
                   }}
-                  className="px-1 py-0.5 bg-secondary rounded text-xs"
+                  className="px-1 py-0.5 bg-secondary rounded text-md"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addLink}
-                  className="px-1 py-0.5 bg-primary text-primary-foreground rounded text-xs"
+                  className="px-1 py-0.5 bg-primary text-primary-foreground rounded text-md"
                 >
                   Add
                 </button>
@@ -138,7 +202,7 @@ export default function LinksItem({ item, onUpdate, editable }: LinksItemProps) 
           ) : (
             <button
               onClick={() => setIsAddingLink(true)}
-              className="flex items-center gap-0.5 text-xs text-primary"
+              className="flex  gap-0.5 text-md text-primary"
             >
               <Plus size={12} /> Add Link
             </button>

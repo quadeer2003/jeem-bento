@@ -242,7 +242,7 @@ export default function BentoGrid({
       verticalCompact={false}
       isBounded={false}
       useCSSTransforms={true}
-      margin={[8, 8]}
+      margin={[16, 8]}
       draggableHandle=".drag-handle"
       allowOverlap={true}
       onDrag={(layout, oldItem, newItem) => {

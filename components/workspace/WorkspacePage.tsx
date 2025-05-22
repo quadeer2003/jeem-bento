@@ -172,14 +172,14 @@ export default function WorkspacePage({ user, initialWorkspaces }: WorkspacePage
         
         {/* Content */}
         <div className="relative z-10">
-          {/* <h1 className="text-3xl font-bold mb-8">
+          <h1 className="text-3xl font-bold mb-8">
             {showCreateWorkspace 
               ? "Create New Workspace" 
               : selectedWorkspaceId 
-                ? workspaces.find(w => w.id === selectedWorkspaceId)?.name || "Workspace"
+                ? ""
                 : "Select a Workspace"
             }
-          </h1> */}
+          </h1>
           
           {showCreateWorkspace ? (
             <CreateWorkspace userId={user.id} onWorkspaceCreated={handleWorkspaceCreated} />
