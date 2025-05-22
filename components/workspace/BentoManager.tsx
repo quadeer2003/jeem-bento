@@ -36,9 +36,6 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
   const [items, setItems] = useState<BentoItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAddingItem, setIsAddingItem] = useState(false);
-  const [newItemTitle, setNewItemTitle] = useState("");
-  const [newItemType, setNewItemType] = useState<BentoItemType>("photo");
 
   useEffect(() => {
     const loadItems = async () => {
@@ -97,10 +94,11 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
     }
   };
 
-  const handleAddItem = async () => {
+  // This function is now exported through WorkspacePage to be used from Sidebar
+  const handleAddItem = async (itemType: BentoItemType, title?: string) => {
     try {
       // Get default column span based on item type
-      const columnSpan = getDefaultColumnSpan(newItemType);
+      const columnSpan = getDefaultColumnSpan(itemType);
       
       // Find a suitable position for the new item that doesn't overlap with existing items
       let posX = 0;
@@ -166,7 +164,7 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
       }
       
       const newItem: Omit<BentoItem, "id"> = {
-        type: newItemType,
+        type: itemType,
         content: {},
         position: {
           x: posX,
@@ -178,19 +176,20 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
       };
 
       // Only add title if it's not empty
-      if (newItemTitle.trim()) {
-        newItem.title = newItemTitle.trim();
+      if (title) {
+        newItem.title = title;
       }
 
       const createdItem = await createBentoItem(newItem);
       if (createdItem) {
         setItems([...items, createdItem]);
-        setNewItemTitle("");
-        setIsAddingItem(false);
+        return true;
       }
+      return false;
     } catch (err) {
       console.error("Error adding item:", err);
       setError("Failed to add item");
+      return false;
     }
   };
 
@@ -225,84 +224,18 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        
-        <button
-          onClick={() => setIsAddingItem(true)}
-          className="flex items-center gap-1 bg-primary text-primary-foreground px-3 py-2 rounded"
-        >
-          <Plus size={16} /> Add Item
-        </button>
-      </div>
-
       {error && (
         <div className="bg-destructive/10 text-destructive p-3 rounded">
           {error}
         </div>
       )}
 
-      {isAddingItem && (
-        <div className="bg-card p-4 rounded-lg border">
-          <h3 className="text-lg font-medium mb-4">Add New Item</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Title (optional)</label>
-              <input
-                type="text"
-                value={newItemTitle}
-                onChange={(e) => setNewItemTitle(e.target.value)}
-                placeholder="Item title (optional)"
-                className="w-full p-2 border rounded"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-1">Type</label>
-              <select
-                value={newItemType}
-                onChange={(e) => setNewItemType(e.target.value as BentoItemType)}
-                className="w-full p-2 border rounded"
-              >
-                <option value="photo">Photo</option>
-                <option value="calendar">Calendar</option>
-                <option value="youtube">YouTube</option>
-                <option value="links">Links</option>
-                <option value="screenshots">Screenshots</option>
-                <option value="contacts">Contacts</option>
-                <option value="websites">Websites</option>
-              </select>
-            </div>
-            
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => {
-                  setIsAddingItem(false);
-                  setError(null);
-                }}
-                className="px-3 py-1 bg-secondary rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddItem}
-                className="px-3 py-1 bg-primary text-primary-foreground rounded"
-              >
-                Add Item
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {items.length === 0 ? (
         <div className="text-center p-8 bg-secondary/20 rounded-lg">
           <p className="text-lg mb-4">Your bento grid is empty</p>
-          <button
-            onClick={() => setIsAddingItem(true)}
-            className="bg-primary text-primary-foreground px-4 py-2 rounded"
-          >
-            Add Your First Item
-          </button>
+          <p className="text-sm text-muted-foreground">
+            Click the pencil icon on your workspace in the sidebar to add your first item.
+          </p>
         </div>
       ) : (
         <BentoGrid
@@ -315,4 +248,40 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
       )}
     </div>
   );
-} 
+}
+
+// Export the addItem function to be used by WorkspacePage
+export const createBentoGridItem = async (
+  workspaceId: string,
+  itemType: BentoItemType,
+  title?: string
+): Promise<BentoItem | null> => {
+  try {
+    // Get default column span based on item type
+    const columnSpan = getDefaultColumnSpan(itemType);
+    
+    // For positioning, we'll use default values and let the grid handle layout
+    const newItem: Omit<BentoItem, "id"> = {
+      type: itemType,
+      content: {},
+      position: {
+        x: 0,
+        y: 0,
+        w: columnSpan,
+        h: 1
+      },
+      workspaceId
+    };
+
+    // Only add title if it's provided
+    if (title) {
+      newItem.title = title;
+    }
+
+    const createdItem = await createBentoItem(newItem);
+    return createdItem || null;
+  } catch (err) {
+    console.error("Error creating bento item:", err);
+    return null;
+  }
+}; 
