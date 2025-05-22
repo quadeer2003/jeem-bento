@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function SignUp() {
+// Component that uses useSearchParams
+function SignUpForm() {
   const { signUp } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,6 +43,69 @@ export default function SignUp() {
     : "/sign-in";
 
   return (
+    <form
+      className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
+      onSubmit={handleSubmit}
+    >
+      <label className="text-md" htmlFor="email">
+        Email
+      </label>
+      <input
+        className="rounded-md px-4 py-2 bg-inherit border mb-6"
+        name="email"
+        placeholder="you@example.com"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <label className="text-md" htmlFor="password">
+        Password
+      </label>
+      <input
+        className="rounded-md px-4 py-2 bg-inherit border mb-6"
+        type="password"
+        name="password"
+        placeholder="••••••••"
+        required
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      {error && (
+        <p className="text-destructive text-sm mb-4">{error}</p>
+      )}
+      {message && (
+        <p className="text-green-600 text-sm mb-4">{message}</p>
+      )}
+      <button
+        className="bg-primary rounded-md px-4 py-2 text-primary-foreground mb-2"
+        disabled={isLoading}
+      >
+        {isLoading ? "Signing Up..." : "Sign Up"}
+      </button>
+      <p className="text-sm text-center">
+        Already have an account?{" "}
+        <Link href={signInUrl} className="text-primary hover:underline">
+          Sign In
+        </Link>
+      </p>
+    </form>
+  );
+}
+
+// Loading fallback component
+function SignUpFormFallback() {
+  return (
+    <div className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+      <div className="rounded-md px-4 py-2 bg-inherit border mb-6 h-10"></div>
+      <div className="rounded-md px-4 py-2 bg-inherit border mb-6 h-10"></div>
+      <div className="bg-primary/30 rounded-md px-4 py-2 mb-2 h-10"></div>
+      <div className="text-sm text-center h-6 opacity-50">Loading...</div>
+    </div>
+  );
+}
+
+export default function SignUp() {
+  return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <Link
         href="/"
@@ -64,52 +128,9 @@ export default function SignUp() {
         Back
       </Link>
 
-      <form
-        className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-        onSubmit={handleSubmit}
-      >
-        <label className="text-md" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          name="email"
-          placeholder="you@example.com"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label className="text-md" htmlFor="password">
-          Password
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          type="password"
-          name="password"
-          placeholder="••••••••"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {error && (
-          <p className="text-destructive text-sm mb-4">{error}</p>
-        )}
-        {message && (
-          <p className="text-green-600 text-sm mb-4">{message}</p>
-        )}
-        <button
-          className="bg-primary rounded-md px-4 py-2 text-primary-foreground mb-2"
-          disabled={isLoading}
-        >
-          {isLoading ? "Signing Up..." : "Sign Up"}
-        </button>
-        <p className="text-sm text-center">
-          Already have an account?{" "}
-          <Link href={signInUrl} className="text-primary hover:underline">
-            Sign In
-          </Link>
-        </p>
-      </form>
+      <Suspense fallback={<SignUpFormFallback />}>
+        <SignUpForm />
+      </Suspense>
     </div>
   );
 }
