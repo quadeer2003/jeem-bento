@@ -2,7 +2,7 @@
 
 import { BentoItem, Website } from "@/lib/types";
 import { useState } from "react";
-import { Globe, Plus, Trash2 } from "lucide-react";
+import { Globe, Plus, Trash2, RefreshCw, Check, X, AlertCircle, Loader2 } from "lucide-react";
 
 interface WebsitesItemProps {
   item: BentoItem;
@@ -10,11 +10,17 @@ interface WebsitesItemProps {
   editable: boolean;
 }
 
+interface WebsiteWithStatus extends Website {
+  status?: 'ok' | 'error' | 'loading';
+  statusMessage?: string;
+}
+
 export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemProps) {
-  const [websites, setWebsites] = useState<Website[]>(item.content?.websites || []);
+  const [websites, setWebsites] = useState<WebsiteWithStatus[]>(item.content?.websites || []);
   const [isAddingWebsite, setIsAddingWebsite] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [newWebsite, setNewWebsite] = useState({ title: "", url: "" });
+  const [isCheckingStatus, setIsCheckingStatus] = useState(false);
 
   const validateUrl = (url: string): boolean => {
     try {
@@ -41,7 +47,7 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
       return;
     }
 
-    const website: Website = {
+    const website: WebsiteWithStatus = {
       id: Math.random().toString(36).substring(2, 9),
       title: newWebsite.title.trim(),
       url: newWebsite.url.trim(),
@@ -73,8 +79,120 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
     }
   };
 
+  // Check status of a single website
+  const checkWebsiteStatus = async (website: WebsiteWithStatus): Promise<WebsiteWithStatus> => {
+    try {
+      // Use a serverless function or API route to check website status
+      // For now, we'll use a simple fetch with a timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      const response = await fetch(`/api/check-website-status?url=${encodeURIComponent(website.url)}`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (response.ok) {
+        const data = await response.json();
+        return {
+          ...website,
+          status: data.isActive ? 'ok' : 'error',
+          statusMessage: data.message
+        };
+      } else {
+        return {
+          ...website,
+          status: 'error',
+          statusMessage: `Error: ${response.status} ${response.statusText}`
+        };
+      }
+    } catch (err) {
+      return {
+        ...website,
+        status: 'error',
+        statusMessage: err instanceof Error ? err.message : 'Unknown error'
+      };
+    }
+  };
+
+  // Check status of all websites
+  const checkAllWebsites = async () => {
+    if (websites.length === 0) return;
+    
+    setIsCheckingStatus(true);
+    
+    // Mark all websites as loading
+    const loadingWebsites = websites.map(website => ({
+      ...website,
+      status: 'loading' as const
+    }));
+    
+    setWebsites(loadingWebsites);
+    
+    try {
+      // Check status of each website in parallel
+      const results = await Promise.all(
+        loadingWebsites.map(website => checkWebsiteStatus(website))
+      );
+      
+      setWebsites(results);
+      onUpdate({ ...item.content, websites: results });
+    } catch (err) {
+      console.error('Error checking websites:', err);
+    } finally {
+      setIsCheckingStatus(false);
+    }
+  };
+
+  // Render status indicator
+  const renderStatusIndicator = (website: WebsiteWithStatus) => {
+    switch (website.status) {
+      case 'ok':
+        return (
+          <span title="Website is active">
+            <Check size={16} className="text-green-500" />
+          </span>
+        );
+      case 'error':
+        return (
+          <span title={website.statusMessage || 'Error'}>
+            <X size={16} className="text-red-500" />
+          </span>
+        );
+      case 'loading':
+        return <Loader2 size={16} className="animate-spin text-primary" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="w-full">
+      {/* Status check button */}
+      {websites.length > 0 && (
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={checkAllWebsites}
+            disabled={isCheckingStatus}
+            className="flex items-center gap-1 text-xs px-2 py-1 bg-secondary rounded hover:bg-secondary/80"
+            title="Check if all websites are active"
+          >
+            {isCheckingStatus ? (
+              <>
+                <Loader2 size={14} className="animate-spin" /> 
+                Checking...
+              </>
+            ) : (
+              <>
+                <RefreshCw size={14} /> 
+                Check Status
+              </>
+            )}
+          </button>
+        </div>
+      )}
+
       {websites.length > 0 ? (
         <div className="grid grid-cols-2 gap-2">
           {websites.map(website => {
@@ -89,15 +207,20 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 overflow-hidden hover:underline text-primary"
                   >
-                    {faviconUrl ? (
-                      <img 
-                        src={faviconUrl} 
-                        alt="" 
-                        className="w-4 h-4 flex-shrink-0"
-                      />
-                    ) : (
-                      <Globe size={16} className="flex-shrink-0" />
-                    )}
+                    <div className="flex-shrink-0 relative">
+                      {faviconUrl ? (
+                        <img 
+                          src={faviconUrl} 
+                          alt="" 
+                          className="w-4 h-4"
+                        />
+                      ) : (
+                        <Globe size={16} />
+                      )}
+                      <div className="absolute -right-1 -bottom-1">
+                        {renderStatusIndicator(website)}
+                      </div>
+                    </div>
                     <div className="font-medium truncate">{website.title}</div>
                   </a>
                   {editable && (
@@ -109,6 +232,12 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
                     </button>
                   )}
                 </div>
+                {website.status === 'error' && website.statusMessage && (
+                  <div className="mt-1 text-xs text-destructive flex items-center gap-1">
+                    <AlertCircle size={12} />
+                    <span className="truncate">{website.statusMessage}</span>
+                  </div>
+                )}
               </div>
             );
           })}

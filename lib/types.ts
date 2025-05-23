@@ -70,4 +70,6 @@ export interface Website {
   title?: string;
   url: string;
   bentoItemId: string;
+  status?: 'ok' | 'error' | 'loading';
+  statusMessage?: string;
 } 
