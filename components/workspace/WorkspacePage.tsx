@@ -167,9 +167,12 @@ export default function WorkspacePage({ user, initialWorkspaces }: WorkspacePage
       >
         {/* Background overlay for better readability */}
         {currentBackground && (
-          <div className="absolute inset-0 "></div>
+          <div className=" inset-0 bg-background/50 backdrop-blur-sm fixed" style={{
+            width: '100%',
+            height: '100%',
+            zIndex: 5
+          }}></div>
         )}
-        
         {/* Content */}
         <div className="relative z-10">
           <h1 className="text-3xl font-bold mb-8">

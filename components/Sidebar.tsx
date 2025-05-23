@@ -9,6 +9,7 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { BentoItemType } from '@/lib/types';
+import { Button } from './ui/button';
 
 interface SidebarProps {
   workspaces: Workspace[];
@@ -153,13 +154,13 @@ export default function Sidebar({
   return (
     <div className="w-16 h-full bg-background border-r flex flex-col items-center py-4">
       {/* App logo/home link */}
-      <Link 
-        href="/" 
-        className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center mb-4 font-bold"
+      <button
+        className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center mb-4 font-bold hover:bg-primary/90 transition-colors"
         title="Home"
       >
-        J
-      </Link>
+        JB
+      </button>
+      
       
       {/* Create workspace button */}
       <button
