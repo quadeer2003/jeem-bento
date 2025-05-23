@@ -167,7 +167,7 @@ export default function WorkspacePage({ user, initialWorkspaces }: WorkspacePage
       >
         {/* Background overlay for better readability */}
         {currentBackground && (
-          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 "></div>
         )}
         
         {/* Content */}
