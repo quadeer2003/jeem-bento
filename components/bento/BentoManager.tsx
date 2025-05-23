@@ -40,6 +40,16 @@ const getDefaultColumnSpan = (type: BentoItemType): number => {
   }
 };
 
+// Define default row spans for different item types
+const getDefaultRowSpan = (type: BentoItemType): number => {
+  switch (type) {
+    case 'quote':
+      return 0.5; // Half height for quotes
+    default:
+      return 1;
+  }
+};
+
 export default function BentoManager({ workspaceId }: BentoManagerProps) {
   const [items, setItems] = useState<BentoItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -107,6 +117,8 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
     try {
       // Get default column span based on item type
       const columnSpan = getDefaultColumnSpan(itemType);
+      // Get default row span based on item type
+      const rowSpan = getDefaultRowSpan(itemType);
       
       // Find a suitable position for the new item that doesn't overlap with existing items
       let posX = 0;
@@ -141,7 +153,7 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
           for (let x = 0; x <= 4 - columnSpan && !found; x++) {
             // Check if all required cells are free
             let canFit = true;
-            for (let i = 0; i < 1; i++) {  // Height is 1
+            for (let i = 0; i < rowSpan; i++) {
               for (let j = 0; j < columnSpan; j++) {
                 if (y + i >= gridOccupancy.length || x + j >= 4 || gridOccupancy[y + i][x + j]) {
                   canFit = false;
@@ -178,7 +190,7 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
           x: posX,
           y: posY,
           w: columnSpan,
-          h: 1
+          h: rowSpan
         },
         workspaceId
       };
@@ -275,6 +287,8 @@ export const createBentoGridItem = async (
   try {
     // Get default column span based on item type
     const columnSpan = getDefaultColumnSpan(itemType);
+    // Get default row span based on item type
+    const rowSpan = getDefaultRowSpan(itemType);
     
     // For positioning, we'll use default values and let the grid handle layout
     const newItem: Omit<BentoItem, "id"> = {
@@ -284,7 +298,7 @@ export const createBentoGridItem = async (
         x: 0,
         y: 0,
         w: columnSpan,
-        h: 1
+        h: rowSpan
       },
       workspaceId
     };

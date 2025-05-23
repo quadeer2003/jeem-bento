@@ -5,7 +5,11 @@ export type BentoItemType =
   | 'links' 
   | 'screenshots' 
   | 'contacts' 
-  | 'websites';
+  | 'websites'
+  | 'pomodoro'
+  | 'quote'
+  | 'quickmail'
+  | 'weather';
 
 export interface BentoItem {
   id: string;

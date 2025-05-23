@@ -9,6 +9,10 @@ import PhotoItem from "@/components/bento/items/PhotoItem";
 import ScreenshotsItem from "@/components/bento/items/ScreenshotsItem";
 import WebsitesItem from "@/components/bento/items/WebsitesItem";
 import YoutubeItem from "@/components/bento/items/YoutubeItem";
+import PomodoroItem from "@/components/bento/items/PomodoroItem";
+import QuoteItem from "@/components/bento/items/QuoteItem";
+import QuickMailItem from "@/components/bento/items/QuickMailItem";
+import WeatherItem from "@/components/bento/items/WeatherItem";
 import { 
   Pencil, 
   Trash2, 
@@ -74,6 +78,14 @@ export default function BentoItemComponent({
         return <WebsitesItem item={item} onUpdate={handleUpdate} editable={editable && isEditing} />;
       case 'youtube':
         return <YoutubeItem item={item} onUpdate={handleUpdate} editable={editable && isEditing} />;
+      case 'pomodoro':
+        return <PomodoroItem item={item} onUpdate={handleUpdate} editable={editable && isEditing} />;
+      case 'quote':
+        return <QuoteItem item={item} onUpdate={handleUpdate} editable={editable && isEditing} />;
+      case 'quickmail':
+        return <QuickMailItem item={item} onUpdate={handleUpdate} editable={editable && isEditing} />;
+      case 'weather':
+        return <WeatherItem item={item} onUpdate={handleUpdate} editable={editable && isEditing} />;
       default:
         return <div>Unknown item type</div>;
     }

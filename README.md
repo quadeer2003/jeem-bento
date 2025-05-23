@@ -102,3 +102,53 @@ Please file feedback and issues over on the [Supabase GitHub org](https://github
 - [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
 - [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
 - [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+
+# Jeem Bento
+
+A customizable dashboard application with draggable and resizable bento-style components.
+
+## New Features
+
+We've added several new bento item types to enhance your workspace:
+
+1. **Pomodoro Timer**: A productivity timer with customizable work and break periods
+2. **Quote of the Day**: Shows a random inspirational quote that changes daily (uses API-Ninjas)
+3. **Quick Mail**: Allows adding contacts and quickly opening Gmail with their email addresses
+4. **Weather Widget**: Displays current weather information for a selected location (uses Open-Meteo API)
+
+## Setup
+
+### Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```
+NEXT_PUBLIC_API_NINJAS_KEY=your_api_ninjas_key
+```
+
+You'll need to sign up for an API key at [API-Ninjas](https://api-ninjas.com/) to use the Quote of the Day feature.
+
+### Database Setup
+
+Run the SQL script to update the database schema for the new bento item types:
+
+```sql
+ALTER TABLE bento_items 
+  DROP CONSTRAINT IF EXISTS bento_items_type_check;
+
+ALTER TABLE bento_items 
+  ADD CONSTRAINT bento_items_type_check 
+  CHECK (type IN ('photo', 'calendar', 'youtube', 'links', 'screenshots', 'contacts', 'websites', 'pomodoro', 'quote', 'quickmail', 'weather'));
+```
+
+## API Information
+
+- **Quotes**: Uses the [API-Ninjas Quotes API](https://api-ninjas.com/api/quotes)
+- **Weather**: Uses the [Open-Meteo Weather API](https://open-meteo.com/) (free, no API key required)
+
+## Usage Notes
+
+- The Pomodoro Timer allows customizing work and break periods
+- The Quote of the Day refreshes once per day automatically
+- The Weather widget uses geolocation by default but allows searching for any location
+- The Quick Mail feature opens Gmail compose with pre-filled recipient addresses

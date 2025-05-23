@@ -321,6 +321,10 @@ export default function Sidebar({
                       <option value="screenshots">Screenshots</option>
                       <option value="contacts">Contacts</option>
                       <option value="websites">Websites</option>
+                      <option value="pomodoro">Pomodoro Timer</option>
+                      <option value="quote">Quote of the Day</option>
+                      <option value="quickmail">Quick Mail</option>
+                      <option value="weather">Weather</option>
                     </select>
                   </div>
                   <div className="flex justify-end gap-2 pt-1">
