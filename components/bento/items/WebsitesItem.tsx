@@ -145,28 +145,6 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
     }
   };
 
-  // Render status indicator
-  const renderStatusIndicator = (website: WebsiteWithStatus) => {
-    switch (website.status) {
-      case 'ok':
-        return (
-          <span title="Website is active">
-            <Check size={16} className="text-green-500" />
-          </span>
-        );
-      case 'error':
-        return (
-          <span title={website.statusMessage || 'Error'}>
-            <X size={16} className="text-red-500" />
-          </span>
-        );
-      case 'loading':
-        return <Loader2 size={16} className="animate-spin text-primary" />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className="w-full">
       {/* Status check button */}
@@ -207,7 +185,7 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 overflow-hidden hover:underline text-primary"
                   >
-                    <div className="flex-shrink-0 relative">
+                    <div className="flex-shrink-0">
                       {faviconUrl ? (
                         <img 
                           src={faviconUrl} 
@@ -217,11 +195,19 @@ export default function WebsitesItem({ item, onUpdate, editable }: WebsitesItemP
                       ) : (
                         <Globe size={16} />
                       )}
-                      <div className="absolute -right-1 -bottom-1">
-                        {renderStatusIndicator(website)}
-                      </div>
                     </div>
                     <div className="font-medium truncate">{website.title}</div>
+                    {website.status && (
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+                        website.status === 'ok' 
+                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
+                          : website.status === 'error'
+                            ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                            : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                      }`}>
+                        {website.status === 'ok' ? 'Active' : website.status === 'error' ? 'Error' : 'Checking...'}
+                      </span>
+                    )}
                   </a>
                   {editable && (
                     <button 
