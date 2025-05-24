@@ -4,7 +4,7 @@ ALTER TABLE bento_items
 
 ALTER TABLE bento_items 
   ADD CONSTRAINT bento_items_type_check 
-  CHECK (type IN ('photo', 'calendar', 'youtube', 'links', 'screenshots', 'contacts', 'websites', 'pomodoro', 'quote', 'quickmail', 'weather'));
+  CHECK (type IN ('photo', 'calendar', 'youtube', 'links', 'screenshots', 'contacts', 'websites', 'pomodoro', 'quote', 'quickmail', 'weather', 'rssfeed'));
 
 -- Add a comment explaining the update
 COMMENT ON CONSTRAINT bento_items_type_check ON bento_items 

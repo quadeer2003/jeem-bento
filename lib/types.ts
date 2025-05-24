@@ -9,7 +9,8 @@ export type BentoItemType =
   | 'pomodoro'
   | 'quote'
   | 'quickmail'
-  | 'weather';
+  | 'weather'
+  | 'rssfeed';
 
 export interface BentoItem {
   id: string;
@@ -72,4 +73,23 @@ export interface Website {
   bentoItemId: string;
   status?: 'ok' | 'error' | 'loading';
   statusMessage?: string;
+}
+
+export interface RSSFeed {
+  id: string;
+  title: string;
+  url: string;
+  favicon?: string;
+  bentoItemId: string;
+  lastFetched?: string;
+}
+
+export interface RSSFeedItem {
+  id: string;
+  feedId: string;
+  title: string;
+  link: string;
+  pubDate: string;
+  description?: string;
+  isRead?: boolean;
 } 
