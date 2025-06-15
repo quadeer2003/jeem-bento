@@ -4,7 +4,7 @@ import { BentoItem, BentoItemType } from "@/lib/types";
 import { useState, useEffect } from "react";
 import BentoGrid from "../bento/BentoGrid";
 import { createBentoItem, deleteBentoItem, getBentoItems, updateBentoItem } from "@/lib/db";
-import { Calendar, Contact, ExternalLink, Globe, Image, Loader2, Plus, Youtube, Clock, Quote, Mail, CloudSun, RssIcon } from "lucide-react";
+import { Calendar, Contact, ExternalLink, Globe, Image, Loader2, Plus, Youtube, Clock, Quote, Mail, CloudSun, RssIcon, FileText } from "lucide-react";
 
 interface BentoManagerProps {
   workspaceId: string;
@@ -36,6 +36,8 @@ const getDefaultColumnSpan = (type: BentoItemType): number => {
     case 'weather':
       return 1;
     case 'rssfeed':
+      return 2;
+    case 'notes':
       return 2;
     default:
       return 1;
@@ -241,6 +243,8 @@ export default function BentoManager({ workspaceId }: BentoManagerProps) {
         return <CloudSun size={20} />;
       case "rssfeed":
         return <RssIcon size={20} />;
+      case "notes":
+        return <FileText size={20} />;
       default:
         return null;
     }

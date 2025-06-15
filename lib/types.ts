@@ -10,7 +10,8 @@ export type BentoItemType =
   | 'quote'
   | 'quickmail'
   | 'weather'
-  | 'rssfeed';
+  | 'rssfeed'
+  | 'notes';
 
 export interface BentoItem {
   id: string;
@@ -92,4 +93,13 @@ export interface RSSFeedItem {
   pubDate: string;
   description?: string;
   isRead?: boolean;
-} 
+}
+
+export interface Note {
+  id: string;
+  title: string;
+  content: any; // BlockNote content
+  created_at: string;
+  updated_at: string;
+  bento_item_id: string;
+}

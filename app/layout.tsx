@@ -5,6 +5,10 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import { EnvVarWarning } from "@/components/env-var-warning";
 
+// Import BlockNote styles globally
+import "@blocknote/core/fonts/inter.css";
+import "@blocknote/mantine/style.css";
+
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";

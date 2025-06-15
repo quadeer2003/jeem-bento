@@ -14,6 +14,7 @@ import QuoteItem from "@/components/bento/items/QuoteItem";
 import QuickMailItem from "@/components/bento/items/QuickMailItem";
 import WeatherItem from "@/components/bento/items/WeatherItem";
 import RSSFeedItem from "@/components/bento/items/RSSFeedItem";
+import NotesItem from "@/components/bento/items/NotesItem";
 import { 
   Pencil, 
   Trash2, 
@@ -89,6 +90,8 @@ export default function BentoItemComponent({
         return <WeatherItem item={item} onUpdate={handleUpdate} editable={editable && isEditing} />;
       case 'rssfeed':
         return <RSSFeedItem item={item} onUpdate={handleUpdate} editable={editable && isEditing} />;
+      case 'notes':
+        return <NotesItem item={item} onUpdate={handleUpdate} editable={editable && isEditing} />;
       default:
         return <div>Unknown item type</div>;
     }

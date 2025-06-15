@@ -346,3 +346,40 @@ button,
   overflow: hidden;
   padding: 0;
 }
+
+/* BlockNote Editor Styles */
+.bn-editor {
+  position: relative;
+}
+
+/* Ensure BlockNote menus appear above modal content */
+.bn-slash-menu,
+.bn-formatting-toolbar,
+.bn-link-toolbar,
+.bn-side-menu {
+  z-index: 10000 !important;
+}
+
+/* BlockNote editor container */
+.bn-container {
+  min-height: 400px;
+}
+
+/* BlockNote content styling */
+.bn-editor [data-content-type] {
+  line-height: 1.6;
+}
+
+/* Slash menu positioning */
+.bn-slash-menu {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+/* Formatting toolbar */
+.bn-formatting-toolbar {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
